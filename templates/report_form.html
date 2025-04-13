@@ -1,35 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Generate Patient Report</title>
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
-</head>
+<head><title>Generate Patient Report</title></head>
 <body>
-    {% if success_message %}
-    <div class="success-message">{{ success_message }}</div>
-    {% endif %}
-    {% if error_message %}
-    <div class="error-message">{{ error_message }}</div>
-    {% endif %}
+    <h2>Patient Report Generator</h2>
     <form action="/generate_pdf" method="post">
-        <h2>Patient Report Generator</h2>
         <label>Patient Name:</label>
-        <input type="text" name="name" value="Test Patient">
+        <input type="text" name="name" value="{{ user.name }}"><br><br>
 
         <label>Email:</label>
-        <input type="email" name="email" value="test@example.com">
+        <input type="email" name="email" value="{{ user.email }}"><br><br>
 
         <label>Phone Number:</label>
-        <input type="text" name="phone" value="9999999999">
+        <input type="text" name="phone" value="{{ user.contact }}"><br><br>
 
         <label>Allergies:</label>
-        <input type="text" name="allergies" value="None">
+        <input type="text" name="allergies" value="{{ user.allergies }}"><br><br>
 
-        <label>Symptoms:</label>
-        <textarea name="symptoms" rows="4" cols="50">I have high fever</textarea>
+        <label>Symptoms:</label><br>
+        <textarea name="symptoms" rows="4" cols="50">{{ symptoms }}</textarea><br><br>
 
         <label>Doctor Email:</label>
-        <input type="email" name="doctor_email" required>
+        <input type="email" name="doctor_email" required><br><br>
 
         <input type="submit" value="Generate & Email Report">
     </form>
