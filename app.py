@@ -4,12 +4,46 @@ import smtplib
 from email.message import EmailMessage
 from datetime import datetime
 import os
+import jwt  # Import pyjwt for decoding the token
+from functools import wraps
 
 app = Flask(__name__)
 
+SECRET_KEY = "dc707ccf4dcd014384e0a0de7bdf2e437960164779561d86f9f24af245e6be0b"  # Define your secret key here
+
+# Function to decode the JWT token
+def decode_jwt(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        return payload
+    except jwt.ExpiredSignatureError:
+        return None  # Token expired
+    except jwt.InvalidTokenError:
+        return None  # Invalid token
+
 @app.route("/")
 def index():
-    return render_template("report_form.html")
+    token = request.args.get("token")
+    symptoms = request.args.get("symptoms", "")
+
+    if token:
+        # Decode the token to retrieve user information (including symptoms)
+        decoded_data = decode_jwt(token)
+        if decoded_data:
+            # Fill the fields with decoded data if valid token
+            name = decoded_data.get("name", "")
+            email = decoded_data.get("email", "")
+            phone = decoded_data.get("contact", "")
+            allergies = decoded_data.get("allergies", "")
+            symptoms = decoded_data.get("symptoms", symptoms)  # Use symptoms from token if available
+        else:
+            name = email = phone = allergies = symptoms = ""
+            return render_template("report_form.html", error_message="Invalid or expired token.")
+    else:
+        # If no token provided, use empty values or form values
+        name = email = phone = allergies = symptoms = ""
+    
+    return render_template("report_form.html", name=name, email=email, phone=phone, allergies=allergies, symptoms=symptoms)
 
 @app.route("/generate_pdf", methods=["POST"])
 def generate_pdf():
@@ -27,10 +61,6 @@ def generate_pdf():
         allergies = request.form.get("allergies", "")
         symptoms = request.form.get("symptoms", "")
         doctor_email = request.form.get("doctor_email", "")
-        
-        # Validate required fields
-        if not all([name, email, doctor_email]):
-            return render_template('report_form.html', error_message='Please fill in all required fields.')
         
         # Validate required fields
         if not all([name, email, doctor_email]):
@@ -152,7 +182,7 @@ def send_email_to_doctor(filename, patient_name, doctor_email):
     try:
         # Email configuration
         sender_email = "jaydeep778899@gmail.com"
-        app_password = "zoki eunp tysb iido"  # App password from Gmail
+        app_password = "zoki eunp tysb iido"
         smtp_server = "smtp.gmail.com"
         smtp_port = 465
 
@@ -209,7 +239,6 @@ def send_email_to_doctor(filename, patient_name, doctor_email):
         error_msg = str(e)
         print(f"Error sending email: {error_msg}")
         return False, error_msg
-
 
 if __name__ == "__main__":
     app.run(debug=True)
