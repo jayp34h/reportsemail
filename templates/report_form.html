@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Patient Report</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    {% if success_message %}
+    <div class="success-message">{{ success_message }}</div>
+    {% endif %}
+    {% if error_message %}
+    <div class="error-message">{{ error_message }}</div>
+    {% endif %}
+    <form action="/generate_pdf" method="post">
+        <h2>Patient Report Generator</h2>
+        <label>Patient Name:</label>
+        <input type="text" name="name" value="Test Patient">
+
+        <label>Email:</label>
+        <input type="email" name="email" value="test@example.com">
+
+        <label>Phone Number:</label>
+        <input type="text" name="phone" value="9999999999">
+
+        <label>Allergies:</label>
+        <input type="text" name="allergies" value="None">
+
+        <label>Symptoms:</label>
+        <textarea name="symptoms" rows="4" cols="50">I have high fever</textarea>
+
+        <label>Doctor Email:</label>
+        <input type="email" name="doctor_email" required>
+
+        <input type="submit" value="Generate & Email Report">
+    </form>
+</body>
+</html>
