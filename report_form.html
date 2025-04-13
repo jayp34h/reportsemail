@@ -4,13 +4,24 @@
 <body>
     <h2>Patient Report Generator</h2>
     <form action="/generate_pdf" method="post">
-        <label>Patient Name:</label><input type="text" name="name" value="Test Patient"><br><br>
-        <label>Email:</label><input type="email" name="email" value="test@example.com"><br><br>
-        <label>Phone Number:</label><input type="text" name="phone" value="9999999999"><br><br>
-        <label>Allergies:</label><input type="text" name="allergies" value="None"><br><br>
+        <label>Patient Name:</label>
+        <input type="text" name="name" value="{{ user.name }}"><br><br>
+
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ user.email }}"><br><br>
+
+        <label>Phone Number:</label>
+        <input type="text" name="phone" value="{{ user.contact }}"><br><br>
+
+        <label>Allergies:</label>
+        <input type="text" name="allergies" value="{{ user.allergies }}"><br><br>
+
         <label>Symptoms:</label><br>
-        <textarea name="symptoms" rows="4" cols="50">I have high fever</textarea><br><br>
-        <label>Doctor Email:</label><input type="email" name="doctor_email" required><br><br>
+        <textarea name="symptoms" rows="4" cols="50">{{ symptoms }}</textarea><br><br>
+
+        <label>Doctor Email:</label>
+        <input type="email" name="doctor_email" required><br><br>
+
         <input type="submit" value="Generate & Email Report">
     </form>
 </body>
