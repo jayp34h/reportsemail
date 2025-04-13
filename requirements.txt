@@ -1,3 +1,4 @@
 fpdf
 flask
 gunicorn
+pyjwt==2.4.0
